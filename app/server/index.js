@@ -1,17 +1,19 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const getColors = require('get-image-colors');
 const { api } = require('./search');
 
 const app = express();
+
+app.use(cors());
 
 app.get('/', async (req, res) => {
   try {
     const colorProfile = await getColors(path.join(__dirname, 'images/sunset.jpg'));
 
     // Index the picture
-    // const result = await api.index(colorProfile.map(c => c.hex()));
-    // console.log('RESULT: ', result);
+    const result = await api.indexDocument(colorProfile.map(c => c.hex()));
   
     const html = `
       <div
@@ -36,6 +38,8 @@ app.get('/', async (req, res) => {
     console.log(e)
   }
 });
+
+app.get('/ping', (req, res) => res.send('SERVER'))
 
 app.listen(4000, () => {
   console.log('Listening on 4000');

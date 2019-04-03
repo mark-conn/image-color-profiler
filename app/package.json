@@ -4,7 +4,9 @@
   "description": "An Image Color Profiling Micro-Service",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start:server": "nodemon ./server",
+    "start:client": "react-scripts start",
+    "dev": "npm run start:server && npm run start:client"
   },
   "author": "Mark Conn",
   "license": "ISC",
@@ -12,6 +14,17 @@
     "express": "*",
     "nodemon": "*",
     "get-image-colors": "2.0.0",
-    "@elastic/elasticsearch": "*"
-  }
+    "@elastic/elasticsearch": "*",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "2.1.8",
+    "axios": "*",
+    "cors": "*"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
