@@ -1,0 +1,17 @@
+{
+  "name": "image-profiler",
+  "version": "1.0.0",
+  "description": "An Image Color Profiling Micro-Service",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Mark Conn",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "nodemon": "*",
+    "get-image-colors": "2.0.0",
+    "@elastic/elasticsearch": "*"
+  }
+}
