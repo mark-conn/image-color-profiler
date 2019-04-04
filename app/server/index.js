@@ -58,7 +58,8 @@ app.get('/search', async (req, res) => {
       && documents.body.hits.hits.map(h => ({
         source: h._source,
         score: h._score,
-        id: h._id
+        id: h._id,
+        highlight: h.highlight
       }))
     
     const response = {
