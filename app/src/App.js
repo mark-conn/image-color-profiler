@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import ColorPicker from './components/colorPicker';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  display: flex;
+`;
+
+const SwatchWrapper = styled.div``;
+const PicturesWrapper = styled.div``;
 
 class App extends Component {
   constructor() {
@@ -8,42 +16,63 @@ class App extends Component {
 
     this.pickers = [1,2,3,4,5];
     this.state = {
-      1: '#F3370F',
-      2: '#0DD79B',
-      3: '#E3D80D',
-      4: '#1328E1',
-      5: '#E80EDD'
+      swatches: {
+        1: { r: 243, g: 55, b: 15 },
+        2: { r: 14, g: 224, b: 161 },
+        3: { r: 227, g: 216, b: 13 },
+        4: { r: 19, g: 40, b: 225 },
+        5: { r: 232, g: 14, b: 221 },
+      },
+      images: []
     }
   }
 
-  componentDidUpdate() {
+  fetchImages() {
     axios.get('http://localhost:4000/search', {
-      params: {
-        ...this.state
-      }
-    })
-      .then((res) => console.log(res));
+        params: {
+          ...this.state.swatches
+        }
+      })
+      .then(({ data }) => {
+        const { images } = data;
+        this.setState({
+          images
+        });
+      })
   }
 
-  setHex({ hex }, id) {
+  setHex(color, id) {
     this.setState({
-      [id]: hex
+      swatches: Object.assign(this.state.swatches, { [id]: color.rgb })
+    }, () => {
+      this.fetchImages();
     });
   }
 
   render() {
     return (
-      <div className="App">
-        {
-          this.pickers.map(n => (
-            <ColorPicker 
-              key={n}
-              setHex={(hex) => this.setHex(hex, n)}
-              color={this.state[n]} 
-            />
-          ))
-        }
-      </div>
+      <Wrapper>
+        <SwatchWrapper>
+          {
+            this.pickers.map(n => (
+              <ColorPicker 
+                key={n}
+                setHex={(color) => this.setHex(color, n)}
+                color={this.state.swatches[n]}
+              />
+            ))
+          }
+        </SwatchWrapper>
+        <PicturesWrapper>
+          {
+            this.state.images.length ?
+            this.state.images.map(i => {
+              return <img src={i.source.source} alt='image' style={{ height: '20rem' }}/>
+            })
+            : null
+          }
+        </PicturesWrapper>
+      </Wrapper>
     );
   }
 }

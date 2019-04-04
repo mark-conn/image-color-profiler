@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 const getColors = require('get-image-colors');
 const { api } = require('./search');
 const { getColorBucket } = require('../utils')
@@ -37,9 +38,37 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.get('/search', (req, res) => {
-  console.log(req.query);
-  res.send('SERVER')
+app.get('/search', async (req, res) => {
+  try {
+    const searchQuery = Object.keys(req.query).map(key => {
+      const arr = [];
+      const color = JSON.parse(req.query[key]);
+
+      arr[0] = color.r;
+      arr[1] = color.g;
+      arr[2] = color.b;
+
+      return getColorBucket(arr);
+    });
+
+    const documents = await api.search(searchQuery);
+
+    const imageHits = documents.body.hits
+      && documents.body.hits.hits.length
+      && documents.body.hits.hits.map(h => ({
+        source: h._source,
+        score: h._score,
+        id: h._id
+      }))
+    
+    const response = {
+      images: imageHits.length ? imageHits : [],
+    };
+  
+    res.send(response);
+  } catch (e) {
+    res.send(e);
+  }
 })
 
 app.listen(4000, () => {

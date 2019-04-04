@@ -7,7 +7,7 @@ function rgbToHex(rgb) {
 };
 
 function getColorBucket(color = [0, 0, 0], regionSize = 16) {
-  /** (terms "Region" and "Bucket" are used interchangeablly)
+  /** (terms "Region" and "Bucket" are used interchangeably)
    * Theory:
    * Divide the rgb cube along all 3 dimensions resulting in a 3D map of 16x16x16 regions.
    * The ID of a region is equivalent to the coordinate of its lower-bounds.
@@ -24,7 +24,7 @@ function getColorBucket(color = [0, 0, 0], regionSize = 16) {
   }
   // Divide each coordinate by regionSize (16), round down and then multiply by regionSize to get lower bound coordinate for coordinate dimension.
   const rgbRegionId = color.map(value => Math.floor(value / regionSize) * regionSize);
-  const hexRegionId = rgbToHex(rgbRegionId)
+  const hexRegionId = rgbToHex(rgbRegionId);
   return hexRegionId
 }
 
