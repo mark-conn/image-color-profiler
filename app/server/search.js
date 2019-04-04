@@ -1,13 +1,15 @@
 const { Client } = require('@elastic/elasticsearch');
+// const request = require('request');
+
 const client = new Client({ node: 'http://localhost:9200' });
-const request = require('request');
 
 const api = {
-  indexDocument: async (colorProfile) => {
+  indexDocument: async ({colorProfile, source}) => {
     return client.index({
       index: 'images',
       body: {
-        color_spaces: colorProfile
+        color_spaces: colorProfile,
+        source: source,
       }
     })
   }

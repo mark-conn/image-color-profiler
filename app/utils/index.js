@@ -24,7 +24,7 @@ function getColorBucket(color = [0, 0, 0], regionSize = 16) {
   }
   // Divide each coordinate by regionSize (16), round down and then multiply by regionSize to get lower bound coordinate for coordinate dimension.
   const rgbRegionId = color.map(value => Math.floor(value / regionSize) * regionSize);
-  const hexRegionId = rgbToHex(rgbRegion)
+  const hexRegionId = rgbToHex(rgbRegionId)
   return hexRegionId
 }
 

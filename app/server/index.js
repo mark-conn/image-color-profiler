@@ -11,10 +11,7 @@ app.use(cors());
 
 app.get('/', async (req, res) => {
   try {
-    const colorProfile = await getColors(path.join(__dirname, 'images/sunset.jpg'));
-
-    // Index the picture
-    const result = await api.indexDocument(colorProfile.map(c => getColorBucket(c._rgb.slice(0, 3))));
+    const colorProfile = await getColors(path.join(__dirname, '../images/sunset.jpg'));
 
     const html = `
       <div
