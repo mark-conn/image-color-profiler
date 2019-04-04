@@ -37,7 +37,10 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.get('/ping', (req, res) => res.send('SERVER'))
+app.get('/search', (req, res) => {
+  console.log(req.query);
+  res.send('SERVER')
+})
 
 app.listen(4000, () => {
   console.log('Listening on 4000');
