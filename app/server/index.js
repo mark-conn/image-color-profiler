@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const getColors = require('get-image-colors');
 const { api } = require('./search');
+const { getColorBucket } = require('../utils')
 
 const app = express();
 
@@ -13,8 +14,8 @@ app.get('/', async (req, res) => {
     const colorProfile = await getColors(path.join(__dirname, 'images/sunset.jpg'));
 
     // Index the picture
-    const result = await api.indexDocument(colorProfile.map(c => c.hex()));
-  
+    const result = await api.indexDocument(colorProfile.map(c => getColorBucket(c._rgb.slice(0, 3))));
+
     const html = `
       <div
         style="
@@ -32,7 +33,7 @@ app.get('/', async (req, res) => {
         }
       </div>
     `;
-    
+
     res.send(html);
   } catch (e) {
     console.log(e)
