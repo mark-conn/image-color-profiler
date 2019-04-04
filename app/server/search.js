@@ -1,7 +1,7 @@
 const { Client } = require('@elastic/elasticsearch');
 // const request = require('request');
 
-const client = new Client({ node: 'http://localhost:9200' });
+const client = new Client({ node: 'http://10.128.49.81:9200' });
 
 const api = {
   indexDocument: async ({colorProfile, source}) => {
