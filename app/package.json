@@ -4,6 +4,7 @@
   "description": "An Image Color Profiling Micro-Service",
   "main": "index.js",
   "scripts": {
+    "start": "node ./server",
     "start:server": "nodemon ./server",
     "start:client": "react-scripts start",
     "dev": "npm run start:server && npm run start:client"
