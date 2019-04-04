@@ -4,11 +4,12 @@ const { Client } = require('@elastic/elasticsearch');
 const client = new Client({ node: 'http://10.128.49.81:9200' });
 
 const api = {
-  indexDocument: async ({colorProfile, source}) => {
+  indexDocument: async ({colorBuckets, source, originalColors}) => {
     return client.index({
       index: 'images',
       body: {
-        color_spaces: colorProfile,
+        color_spaces: colorBuckets,
+        original_colors: originalColors,
         source: source,
       }
     })

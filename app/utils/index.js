@@ -29,5 +29,6 @@ function getColorBucket(color = [0, 0, 0], regionSize = 16) {
 }
 
 module.exports ={
-  getColorBucket
+  getColorBucket,
+  rgbToHex
 }
