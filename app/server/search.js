@@ -18,8 +18,41 @@ const api = {
       index: 'images',
       body: {
         query: {
-          terms: {
-            color_spaces: searchQuery
+          bool: {
+            should: [
+              {
+                term: {
+                  color_spaces: {
+                    value: searchQuery[0],
+                    boost: 1.5
+                  }
+                }
+              },
+              {
+                term: {
+                  color_spaces: {
+                    value: searchQuery[1],
+                    boost: 1.5
+                  }
+                }
+              },
+              {
+                term: {
+                  color_spaces: {
+                    value: searchQuery[2],
+                    boost: 1.5
+                  }
+                }
+              },
+            ]
+          }
+        },
+        highlight: {
+          fields: {
+            color_spaces: {
+              fragment_size : 6,
+              number_of_fragments : 3,
+            }
           }
         }
       }
