@@ -12,23 +12,42 @@ app.use(cors());
 
 app.get('/', async (req, res) => {
   try {
-    const colorProfile = await getColors(path.join(__dirname, '../images/sunset.jpg'));
-
     const html = `
       <div
         style="
           display: flex;
         "
       >
-        ${
-          colorProfile.map(({ _rgb }) => (
-              `<div style="
-                width: 200px;
-                height: 200px;
-                background-color: rgba(${_rgb[0]}, ${_rgb[1]}, ${_rgb[2]}, ${_rgb[3]});
-              "></div>`
-          )).join('')
-        }
+      Hello world
+      <div style="
+        width: 200px;
+        height: 200px;
+        background-color: rgba(187, 123, 17, 1);
+      "></div>
+
+      <div style="
+        width: 200px;
+        height: 200px;
+        background-color: rgba(234, 9, 187, 1);
+      "></div>
+
+      <div style="
+        width: 200px;
+        height: 200px;
+        background-color: rgba(10, 143, 87, 1);
+      "></div>
+
+      <div style="
+        width: 200px;
+        height: 200px;
+        background-color: rgba(100, 08, 100, 1);
+      "></div>
+
+      <div style="
+        width: 200px;
+        height: 200px;
+        background-color: rgba(200, 9, 20, 1);
+      "></div>
       </div>
     `;
 
@@ -60,17 +79,17 @@ app.get('/search', async (req, res) => {
         score: h._score,
         id: h._id
       }))
-    
+
     const response = {
       images: imageHits.length ? imageHits : [],
     };
-  
+
     res.send(response);
   } catch (e) {
     res.send(e);
   }
 })
 
-app.listen(4000, () => {
-  console.log('Listening on 4000');
+app.listen(process.env.PORT || 4000, () => {
+  console.log('Listening on ', process.env.PORT || 4000);
 })

@@ -28,7 +28,7 @@ class App extends Component {
   }
 
   fetchImages() {
-    axios.get('http://localhost:4000/search', {
+    axios.get(this.props.serverUrl+'/search', {
         params: {
           ...this.state.swatches
         }
@@ -50,12 +50,13 @@ class App extends Component {
   }
 
   render() {
+    console.log('\n\n\n\n\n this.props.serverUrl \n', this.props.serverUrl, process.env.NODE_ENV, '\n\n\n\n\n');
     return (
       <Wrapper>
         <SwatchWrapper>
           {
             this.pickers.map(n => (
-              <ColorPicker 
+              <ColorPicker
                 key={n}
                 setHex={(color) => this.setHex(color, n)}
                 color={this.state.swatches[n]}
