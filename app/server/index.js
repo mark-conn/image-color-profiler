@@ -1,74 +1,35 @@
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
-const fs = require('fs');
-const getColors = require('get-image-colors');
-const { api } = require('./search');
-const { getColorBucket } = require('../utils')
+const { api } = require('./elastic-api');
+const { getColorBucket, rgbToHex } = require('../utils')
 
 const app = express();
 
 app.use(cors());
 
-app.get('/', async (req, res) => {
-  try {
-    const html = `
-      <div
-        style="
-          display: flex;
-        "
-      >
-      Hello world
-      <div style="
-        width: 200px;
-        height: 200px;
-        background-color: rgba(187, 123, 17, 1);
-      "></div>
-
-      <div style="
-        width: 200px;
-        height: 200px;
-        background-color: rgba(234, 9, 187, 1);
-      "></div>
-
-      <div style="
-        width: 200px;
-        height: 200px;
-        background-color: rgba(10, 143, 87, 1);
-      "></div>
-
-      <div style="
-        width: 200px;
-        height: 200px;
-        background-color: rgba(100, 08, 100, 1);
-      "></div>
-
-      <div style="
-        width: 200px;
-        height: 200px;
-        background-color: rgba(200, 9, 20, 1);
-      "></div>
-      </div>
-    `;
-
-    res.send(html);
-  } catch (e) {
-    console.log(e)
-  }
-});
-
-app.get('/search', async (req, res) => {
-  try {
-    const searchQuery = Object.keys(req.query).map(key => {
-      const arr = [];
-      const color = JSON.parse(req.query[key]);
+function buildSearchQuery(query, resolution) { 
+  return Object.keys(query).map(key => {
+    const arr = [];
+      const color = JSON.parse(query[key]);
 
       arr[0] = color.r;
       arr[1] = color.g;
       arr[2] = color.b;
 
-      return getColorBucket(arr);
-    });
+      if (!resolution) return rgbToHex(arr);
+
+      return getColorBucket(arr, resolution);
+  })
+}
+
+app.get('/search', async (req, res) => {
+  try {
+    const searchQuery = {
+      ultra_lo: buildSearchQuery(req.query, 64),
+      lo_res: buildSearchQuery(req.query, 32),
+      hi_res: buildSearchQuery(req.query, 16),
+      original_colors: buildSearchQuery(req.query),
+    };
 
     const documents = await api.search(searchQuery);
 

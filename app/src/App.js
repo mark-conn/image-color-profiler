@@ -18,6 +18,7 @@ const PicturesWrapper = styled.div`
 const ColorsWrapper = styled.div`
   display: flex;
   align-items: center;
+  letter-spacing: 2px;
 `;
 
 const Color = styled.div`
@@ -112,7 +113,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('\n\n\n\n\n this.props.serverUrl \n', this.props.serverUrl, process.env.NODE_ENV, '\n\n\n\n\n');
     return (
       <div>
         <Logo>
@@ -134,19 +134,74 @@ class App extends Component {
           {
             this.state.images.length ?
             this.state.images.map((i, index) => {
-              const highlights = i.highlight.color_spaces.map(c => this.highlightToColor(c));
+              // const highlights = i.highlight.ultra_lo.map(c => this.highlightToColor(c));
 
               return (
                 <div style={{ padding: '.5rem' }} key={index} >
                   <img src={i.source.source} alt='image' style={{ height: '20rem' }}/>
                   <ColorsWrapper>
+                  UL
+                    {
+                      i.source.ultra_lo.map((c, index) => (
+                        <Color
+                          color={`#${c}`}
+                          key={`${c}_${index}`}
+                          highlight={
+                            i.highlight.ultra_lo &&
+                            i.highlight.ultra_lo.map(c => this.highlightToColor(c))
+                              .filter(h => h === `#${this.getColorBucket(this.hexToRgb(c), 64)}`)
+                              .length
+                          }
+                        />
+                      ))
+                    }
+                  </ColorsWrapper>
+                  <ColorsWrapper>
+                  LO
+                    {
+                      i.source.lo_res.map((c, index) => (
+                        <Color
+                          color={`#${c}`}
+                          key={`${c}_${index}`}
+                          highlight={
+                            i.highlight.lo_res &&
+                            i.highlight.lo_res.map(c => this.highlightToColor(c))
+                              .filter(h => h === `#${this.getColorBucket(this.hexToRgb(c), 32)}`)
+                              .length
+                          }
+                        />
+                      ))
+                    }
+                  </ColorsWrapper>
+                  <ColorsWrapper>
+                  HI
+                    {
+                      i.source.hi_res.map((c, index) => (
+                        <Color
+                          color={`#${c}`}
+                          key={`${c}_${index}`}
+                          highlight={
+                            i.highlight.hi_res &&
+                            i.highlight.hi_res.map(c => this.highlightToColor(c))
+                              .filter(h => h === `#${this.getColorBucket(this.hexToRgb(c), 16)}`)
+                              .length
+                          }
+                        />
+                      ))
+                    }
+                  </ColorsWrapper>
+                  <ColorsWrapper>
+                  OR
                     {
                       i.source.original_colors.map((c, index) => (
                         <Color
                           color={`#${c}`}
-                          key={`${c}_${i}`}
+                          key={`${c}_${index}`}
                           highlight={
-                            highlights.filter(h => h === `#${this.getColorBucket(this.hexToRgb(c))}`).length
+                            i.highlight.original_colors &&
+                            i.highlight.original_colors.map(c => this.highlightToColor(c))
+                              .filter(h => h === `#${c}`)
+                              .length
                           }
                         />
                       ))

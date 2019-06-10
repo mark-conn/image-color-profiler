@@ -1,14 +1,11 @@
-const path = require("path");
 const getColors = require("get-image-colors");
-const fs = require("fs");
-const { api } = require("../server/search");
+const { api } = require("../server/elastic-api");
 const { getColorBucket, rgbToHex } = require("../utils");
-const request = require("request");
 const rp = require('request-promise');
 
 // const cdnUrl = "https://image.shutterstock.com/z/";
 
-const getImageUrl = id => `https://cdn.shutterstock.com/shutterstock/photos/${id}/mosaic_250/${id}.jpg`
+const getImageUrl = id => `https://cdn.shutterstock.com/shutterstock/photos/${id}/mosaic_250/${id}.jpg`;
 
 async function asyncForEach(array, callback) {
   for (let index = 0; index < array.length; index++) {
@@ -33,15 +30,24 @@ asyncForEach(imageIds, async imageIdDotJpg => {
       );
 
       // get color buckets for each dominant color
-      const colorBuckets = dominantColors.map(c => getColorBucket(c));
+      const hiResBuckets = dominantColors.map(c => getColorBucket(c));
+      const lowResBuckets = dominantColors.map(c => getColorBucket(c, 32));
+      const ultraLoBuckets = dominantColors.map(c => getColorBucket(c, 64));
 
       const originalColors = dominantColors.map(c => rgbToHex(c));
+      
       // Index the picture
-      api.indexDocument({ source: imageSource, colorBuckets, originalColors });
+      api.indexDocument({
+        source: imageSource,
+        hiResBuckets,
+        lowResBuckets,
+        ultraLoBuckets,
+        originalColors
+      });
 
-      console.log("\n", imageSource, "   ", colorBuckets, "   ", originalColors, "\n");
+      console.log("\n", imageSource, "   ", hiResBuckets, "   ", lowResBuckets, "   ", originalColors, "\n");
     })
     .catch(function (err) {
-      console.log('invalid image')
+      console.log('invalid image', err)
     });
 });
